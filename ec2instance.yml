@@ -1,0 +1,33 @@
+---
+- name: creating ec2instance via ansible
+  hosts: localhost
+  tasks:
+    - name: create instance
+      amazon.aws.ec2_instance:
+        name: ansible_instance
+        region: ap-south-1
+        image_id: ami-008b85aa3ff5c1b02
+        key_name: ansible
+        vpc_subnet_id: subnet-028381d511ab8286b
+        access_key: AKIAUFSGHUHXHPOGCCCL
+        secret_key: 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
+        instance_type: t2.micro
+
+- name: deploye webserver
+  hosts: all
+  tasks:
+    - name: install httpd pkg
+      yum:
+        name: httpd
+        state: present
+    - name: start and enable httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: copy code of website
+      copy:
+        src: /root/ansible/web/
+        dest: /var/www/html/
+          
+
